@@ -1,93 +1,84 @@
-# Data-Cleaning-and-Transformation1
-markdown# Excel Assignment 2 - Data Cleaning and Transformation
+# Excel Capstone Project - E-commerce Sales Analysis
 
-Cleaned and transformed raw product data in Microsoft Excel.
-File: `Excel_Assignment_2.xlsx`
+## 1. Project Overview
+Analysis of 2,000 e-commerce orders to find which Category, Region, and Loyalty Tier drive the most sales, and to identify data quality issues.
 
-## Files / Sheets
+**Total Sales:** ₹21,74,024
+**Total Orders:** 2,000
+**Average Order Value:** ₹1,087.01
 
-| Sheet | What it contains |
-| --- | --- |
-| Product_DB2 | Raw data - 47 products |
-| Task | 6 assignment tasks |
-| Answer | Cleaned data with formulas |
-| Product_DB24 | Cleaned table for Power Query |
-| Copy for Power Query | Copy used for Power Query Remove Duplicates |
-
-## Raw Data Columns
-
-| Column | Example |
-| --- | --- |
-| Product ID | 28-JAN-US |
-| Product Name | laptop, smartphone, headphones |
-| Brand Name | Dell, Nike, Samsung |
-| Price ($) | 1000, 80, 130 |
-| Quantity | 30, 15, 40 |
-| Category | Electronics, Fashion, Kitchen |
-
-Product ID format is: `DD-MMM-CC`
-Example: `28-JAN-US` = 28 Jan, Country US
-
-## What I Did
-
-### 1. Handling Missing Values
-
-- **Missing Price:** Filled with Median Price
-    - Formula: `=MEDIAN(I2:I35)`
-    - Example: Headphones (07-JUN-UK), Camping Tent, Sunglasses had no price
-- **Missing Category:** Filled with `Unknown`
-    - Formula: `=IF(ISBLANK(Category),"Unknown",Category)`
-    - Example: Backpack, Sneakers, Coffee Maker had no category
-
-### 2. Correcting Inconsistent Data
-
-- **Product Name:** `laptop` -> `Laptop`, `smartphone` -> `Smartphone`, `headphones` -> `Headphones`
-    - Formula: `=PROPER(TRIM(Product Name))`
-- **Category Typo:** `Electroni` -> `Electronics`
-    - Formula: `=IF(Category="Electroni","Electronics",Category)`
-    - Also fixed with Find and Replace
-
-### 3. Removing Duplicates
-
-- Used Power Query: `Data > From Table / Range > Remove Duplicates`
-- Duplicate full rows found:
-    - `21-AUG-CA - Laptop Bag - Samsonite` (2 times)
-    - `16-APR-ES - headphones - Bose` (2 times)
-- Removed duplicates and loaded cleaned data back to Excel
-
-### 4. Splitting and Merging Data
-
-- **Manufacturing Date from Product ID:**
-    - `=LEFT(Product ID,6)` -> `28-JAN`
-    - Then `=DATEVALUE(TRIM(Manufacturing Date)&"-2026")`
-- **Country Code from Product ID:**
-    - `=RIGHT(Product ID,2)` -> `US`
-- **Product Brand - Merge Product Name + Brand Name:**
-    - `=Product Name & " - " & Brand Name`
-    - Example: `Laptop - Dell`, `Sneakers - Nike`
-
-### 5. Number Formatting
-
-- **Price to Currency:** Format Cells > Currency > `$1,000.00`
-- **Manufacturing Date to DD-MM-YYYY:** Format Cells > Custom > `DD-MM-YYYY`
-    - Example: `28-01-2026`
-
-### 6. Conditional Formatting
-
-- **Price column:** Data Bars
-    - Highest price `$1,000.00` = Longest bar
-    - Lowest price `$30.00` = Shortest bar
-- **Category column:** Custom Rule
-    - Formula: `=$P2="Electronics"`
-    - Electronics cells highlighted in Light Blue
-
-## Key Formulas Used
-
-- `LEFT`, `RIGHT`, `DATEVALUE`, `TRIM`, `PROPER`, `IF`, `ISBLANK`, `MEDIAN`
-
-
-## Tools Used
-
+## 2. Tools Used
 - Microsoft Excel
-- Power Query
-- Excel Formulas + Conditional Formatting
+- Pivot Tables
+- VLOOKUP / XLOOKUP
+- Descriptive Statistics (Analysis ToolPak)
+- Charts - Bar, Column, Doughnut
+- Data Cleaning & Validation
+
+## 3. Files in This Project
+| File / Sheet | Description |
+| --- | --- |
+| Raw Data | Original sales data - 2000 rows |
+| Category Master | Category_ID to Category_Name mapping |
+| Region Master | Region_ID to Region_Name mapping |
+| Loyalty Master | Tier_ID to Tier_Name mapping |
+| Final Sheet | Cleaned data after VLOOKUP - all masters joined |
+| Pivot - Category | Sales by Category |
+| Pivot - Region | Sales by Region |
+| Pivot - Loyalty | Sales by Loyalty Tier |
+| Descriptive Stats | Mean, Median, Mode, Std Dev for Total_Amount |
+| Dashboard | 3 Charts in one page |
+| Summary | Key insights & recommendations |
+
+## 4. Data Cleaning Done
+1.  Joined 3 master tables using VLOOKUP on Final Sheet
+2.  Created Total_Amount = Quantity * Unit_Price
+3.  Found Missing Values:
+    - ₹46,059 (2.1%) sales as Unknown Category - Category_ID not in master
+    - ₹17,513 (0.8%) sales as Unknown Tier - Tier_ID not in master
+4.  Checked duplicates, blank rows, and negative values - none found
+
+## 5. Key Insights
+
+### Category
+Sports is top at ₹5,42,003 (24.9%), followed by Electronics ₹5,05,875 (23.3%). Together they are 48% of sales. Beauty is lowest at ₹3,01,118 (13.9%).
+
+### Region
+North ₹6,43,565 (29.6%), South ₹6,34,885 (29.2%) and East ₹6,24,868 (28.7%) are almost equal. West is very low at ₹2,70,706 (12.5%) - 57% below others. Needs investigation.
+
+### Loyalty Tier
+Platinum is highest at ₹6,55,317 (30.1%). Bronze ₹5,23,700 (24.1%), Gold ₹5,18,192 (23.8%), Silver lowest at ₹4,59,302 (21.1%). Premium customers drive the most revenue.
+
+## 6. Descriptive Statistics - Total_Amount
+- Mean: ₹1,087.01
+- Median: ₹868.50
+- Mode: ₹571
+- Standard Deviation: ₹818.88
+- Min: ₹18 | Max: ₹3,908
+- Skewness: 0.88
+
+**Interpretation:** Mean > Median, so distribution is right-skewed. Most orders are small, few high-value orders pull the average up.
+
+## 7. Data Visualization
+1.  Bar Chart - Sales by Category
+2.  Doughnut Chart - Sales by Region (%)
+3.  Column Chart - Sales by Loyalty Tier
+
+All charts are in the `Dashboard` sheet.
+
+## 8. Recommendations
+1.  Focus marketing on Sports & Electronics - top 2 categories.
+2.  Retain Platinum customers with exclusive offers - they give 30% revenue.
+3.  Investigate West Region - low sales may be due to logistics, pricing, or missing data.
+4.  Fix Master Data - add missing Category_ID and Tier_ID to reduce Unknown sales.
+5.  Promote Beauty category with bundles to increase its 13.9% share.
+
+## 9. How to Use This File
+1.  Open `Excel Capstone Project - E-commerce Analysis.xlsx`
+2.  Start from `Summary` sheet for insights
+3.  Go to `Dashboard` for charts
+4.  Check `Final Sheet` for cleaned data
+5.  Check `Descriptive Stats` for statistical summary
+
+## 10. Author
+Capstone Project - E-commerce Sales Analysis using Excel
